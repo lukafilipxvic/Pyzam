@@ -1,0 +1,378 @@
+import pathlib
+import uuid
+import time
+from typing import Optional
+
+from pydub import AudioSegment
+
+from typing import Dict, Any, Union
+
+from .misc import Request
+from .misc import ShazamUrl
+from .schemas.artists import ArtistQuery
+from .signature import DecodedMessage
+from .enums import GenreMusic
+from .converter import Converter, Geo
+from .typehints import CountryCode
+from .utils import ArtistQueryGenerator
+from .utils import get_song
+
+
+class Shazam(Converter, Geo, Request):
+    """Is asynchronous framework for reverse engineered Shazam API written in Python 3.7 with
+    asyncio and aiohttp."""
+
+    def __init__(self, language: str = "en-US", endpoint_country: str = "GB"):
+        super().__init__(language=language)
+        self.language = language
+        self.endpoint_country = endpoint_country
+
+    async def top_world_tracks(self, limit: int = 200, offset: int = 0) -> Dict[str, Any]:
+        """
+        Search top world tracks
+
+            :param limit: Determines how many songs the maximum can be in the request.
+                Example: If 5 is specified, the query will return no more than 5 songs.
+            :param offset: A parameter that determines with which song to display the request.
+                The default is 0. If you want to skip the first few songs, set this parameter to
+                your own.
+            :return: dict tracks
+        """
+        return await self.request(
+            "GET",
+            ShazamUrl.TOP_TRACKS_WORLD.format(
+                language=self.language,
+                endpoint_country=self.endpoint_country,
+                limit=limit,
+                offset=offset,
+            ),
+            headers=self.headers(),
+        )
+
+    async def artist_about(
+        self, artist_id: int, query: Optional[ArtistQuery] = None
+    ) -> Dict[str, Any]:
+        """
+        Retrieving information from an artist profile
+
+            :param artist_id: Artist number. Example (203347991)
+            :param query: Foo
+            https://www.shazam.com/artist/203347991/
+            :return: dict about artist
+        """
+
+        if query:
+            pg = ArtistQueryGenerator(source=query)
+            params_dict = pg.params()
+        else:
+            params_dict = {}
+
+        return await self.request(
+            "GET",
+            ShazamUrl.SEARCH_ARTIST_V2.format(
+                endpoint_country=self.endpoint_country,
+                artist_id=artist_id,
+            ),
+            params=params_dict,
+            headers=self.headers(),
+        )
+
+    async def track_about(self, track_id: int) -> Dict[str, Any]:
+        """
+        Get track information
+
+            :param track_id: Track number. Example: (549952578)
+            https://www.shazam.com/track/549952578/
+            :return: dict about track
+        """
+        return await self.request(
+            "GET",
+            ShazamUrl.ABOUT_TRACK.format(
+                language=self.language,
+                endpoint_country=self.endpoint_country,
+                track_id=track_id,
+            ),
+            headers=self.headers(),
+        )
+
+    async def top_country_tracks(
+        self,
+        country_code: Union[CountryCode, str],
+        limit: int = 200,
+        offset: int = 0,
+    ) -> Dict[str, Any]:
+        """
+        Get the best tracks by country code
+        https://www.shazam.com/charts/discovery/netherlands
+
+            :param country_code: ISO 3166-3 alpha-2 code. Example: RU,NL,UA
+            :param limit: Determines how many songs the maximum can be in the request.
+                Example: If 5 is specified, the query will return no more than 5 songs.
+            :param offset: A parameter that determines with which song to display the request.
+                The default is 0. If you want to skip the first few songs, set this parameter to
+                your own.
+            :return: dict songs
+        """
+        return await self.request(
+            "GET",
+            ShazamUrl.TOP_TRACKS_COUNTRY.format(
+                language=self.language,
+                endpoint_country=self.endpoint_country,
+                country_code=country_code,
+                limit=limit,
+                offset=offset,
+            ),
+            headers=self.headers(),
+        )
+
+    async def top_city_tracks(
+        self,
+        country_code: Union[CountryCode, str],
+        city_name: str,
+        limit: int = 200,
+        offset: int = 0,
+    ) -> Dict[str, Any]:
+        """
+        Retrieving information from an artist profile
+        https://www.shazam.com/charts/top-50/russia/moscow
+
+            :param country_code: ISO 3166-3 alpha-2 code. Example: RU,NL,UA
+            :param city_name: City name from https://github.com/dotX12/dotX12/blob/main/city.json
+                Example: Budapest, Moscow
+            :param limit: Determines how many songs the maximum can be in the request.
+                Example: If 5 is specified, the query will return no more than 5 songs.
+            :param offset: A parameter that determines with which song to display the request.
+                The default is 0. If you want to skip the first few songs, set this parameter to
+                your own.
+            :return: dict songs
+        """
+        city_id = await self.city_id_from(country=country_code, city=city_name)
+        return await self.request(
+            "GET",
+            ShazamUrl.TOP_TRACKS_CITY.format(
+                language=self.language,
+                endpoint_country=self.endpoint_country,
+                limit=limit,
+                offset=offset,
+                city_id=city_id,
+            ),
+            headers=self.headers(),
+        )
+
+    async def top_world_genre_tracks(
+        self,
+        genre: Union[GenreMusic, int],
+        limit: int = 100,
+        offset: int = 0,
+    ) -> Dict[str, Any]:
+        """
+        Get world tracks by certain genre
+        https://www.shazam.com/charts/genre/world/rock
+
+            :param genre: Genre name or ID:
+                POP = 1, HIP_HOP_RAP = 2, DANCE = 3, ELECTRONIC = 4, RNB_SOUL = 5, ALTERNATIVE =
+                6, ROCK = 7
+                LATIN = 8, FILM_TV_STAGE = 9, COUNTRY = 10, AFRO_BEATS = 11, WORLDWIDE = 12,
+                REGGAE_DANCE_HALL = 13
+                HOUSE = 14, K_POP = 15, FRENCH_POP = 16, SINGER_SONGWRITER = 17,
+                REGIONAL_MEXICANO = 18
+
+            :param limit: Determines how many songs the maximum can be in the request.
+                    Example: If 5 is specified, the query will return no more than 5 songs.
+            :param offset: A parameter that determines with which song to display the request.
+                    The default is 0. If you want to skip the first few songs, set this parameter
+                    to your own.
+            :return: dict songs
+        """
+        return await self.request(
+            "GET",
+            ShazamUrl.GENRE_WORLD.format(
+                language=self.language,
+                endpoint_country=self.endpoint_country,
+                limit=limit,
+                offset=offset,
+                genre=genre,
+            ),
+            headers=self.headers(),
+        )
+
+    async def top_country_genre_tracks(
+        self,
+        country_code: str,
+        genre: Union[GenreMusic, int],
+        limit: int = 200,
+        offset: int = 0,
+    ) -> Dict[str, Any]:
+        """
+        The best tracks by a genre in the country
+        https://www.shazam.com/charts/genre/spain/hip-hop-rap
+            :param country_code: ISO 3166-3 alpha-2 code. Example: RU,NL,UA
+            :param genre: Genre name or ID:
+                POP = 1, HIP_HOP_RAP = 2, DANCE = 3, ELECTRONIC = 4, RNB_SOUL = 5, ALTERNATIVE =
+                6, ROCK = 7
+                LATIN = 8, FILM_TV_STAGE = 9, COUNTRY = 10, AFRO_BEATS = 11, WORLDWIDE = 12,
+                REGGAE_DANCE_HALL = 13
+                HOUSE = 14, K_POP = 15, FRENCH_POP = 16, SINGER_SONGWRITER = 17,
+                REGIONAL_MEXICANO = 18
+            :param limit: Determines how many songs the maximum can be in the request.
+                Example: If 5 is specified, the query will return no more than 5 songs
+            :param offset: A parameter that determines with which song to display the request.
+                The default is 0. If you want to skip the first few songs, set this parameter to
+                your own.
+            :return: dict songs
+        """
+        return await self.request(
+            "GET",
+            ShazamUrl.GENRE_COUNTRY.format(
+                language=self.language,
+                endpoint_country=self.endpoint_country,
+                limit=limit,
+                offset=offset,
+                country=country_code,
+                genre=genre,
+            ),
+            headers=self.headers(),
+        )
+
+    async def related_tracks(
+        self,
+        track_id: int,
+        limit: int = 20,
+        offset: int = 0,
+    ) -> Dict[str, Any]:
+        """
+        Similar songs based song id
+        https://www.shazam.com/track/546891609/2-phu%CC%81t-ho%CC%9Bn-kaiz-remix
+            :param track_id: Track number. Example: (549952578)
+            https://www.shazam.com/track/549952578/
+            :param limit: Determines how many songs the maximum can be in the request.
+                Example: If 5 is specified, the query will return no more than 5 songs
+            :param offset: A parameter that determines with which song to display the request.
+                The default is 0. If you want to skip the first few songs, set this parameter to
+                your own.
+            :return: dict tracks
+        """
+        return await self.request(
+            "GET",
+            ShazamUrl.RELATED_SONGS.format(
+                language=self.language,
+                endpoint_country=self.endpoint_country,
+                limit=limit,
+                offset=offset,
+                track_id=track_id,
+            ),
+            headers=self.headers(),
+        )
+
+    async def search_artist(
+        self,
+        query: str,
+        limit: int = 10,
+        offset: int = 0,
+    ) -> Dict[str, Any]:
+        """
+        Search all artists by prefix or fullname
+            :param query: Artist name or search prefix
+            :param limit: Determines how many artists the maximum can be in the request.
+                Example: If 5 is specified, the query will return no more than 5 artists.
+            :param offset: A parameter that determines with which song to display the request.
+                The default is 0. If you want to skip the first few songs, set this parameter to
+                your own.
+            :return: dict artists
+        """
+        return await self.request(
+            "GET",
+            ShazamUrl.SEARCH_ARTIST.format(
+                language=self.language,
+                endpoint_country=self.endpoint_country,
+                limit=limit,
+                offset=offset,
+                query=query,
+            ),
+            headers=self.headers(),
+        )
+
+    async def search_track(self, query: str, limit: int = 10, offset: int = 0) -> Dict[str, Any]:
+        """
+        Search all tracks by prefix
+            :param query: Track full title or prefix title
+            :param limit: Determines how many songs the maximum can be in the request.
+                Example: If 5 is specified, the query will return no more than 5 songs.
+            :param offset: A parameter that determines with which song to display the request.
+                The default is 0. If you want to skip the first few songs, set this parameter to
+                your own.
+            :return: dict songs
+        """
+        return await self.request(
+            "GET",
+            ShazamUrl.SEARCH_MUSIC.format(
+                language=self.language,
+                endpoint_country=self.endpoint_country,
+                limit=limit,
+                offset=offset,
+                query=query,
+            ),
+            headers=self.headers(),
+        )
+
+    async def listening_counter(self, track_id: int) -> Dict[str, Any]:
+        """
+        Returns the total track listener counter.
+            :param track_id: Track number. Example: (559284007)
+            https://www.shazam.com/track/559284007/rampampam
+            :return: The data dictionary that contains the listen counter.
+        """
+
+        return await self.request(
+            "GET",
+            ShazamUrl.LISTENING_COUNTER.format(
+                track_id,
+                language=self.language,
+            ),
+            headers=self.headers(),
+        )
+
+    async def get_youtube_data(self, link: str) -> Dict[str, Any]:
+        return await self.request("GET", link, headers=self.headers())
+
+    async def recognize_song(
+        self, data: Union[str, pathlib.Path, bytes, bytearray, AudioSegment]
+    ) -> Dict[str, Any]:
+        """
+        Creating a song signature based on a file and searching for this signature in the shazam
+        database.
+            :param data: Path to song file or bytes
+            :return: Dictionary with information about the found song
+        """
+        song = await get_song(data=data)
+        audio = self.normalize_audio_data(song)
+        signature_generator = self.create_signature_generator(audio)
+        signature = signature_generator.get_next_signature()
+
+        if len(signature_generator.input_pending_processing) < 128:
+            return {"matches": []}
+
+        while not signature:
+            signature = signature_generator.get_next_signature()
+        results = await self.send_recognize_request(signature)
+        return results
+
+    async def send_recognize_request(self, sig: DecodedMessage) -> Dict[str, Any]:
+        data = Converter.data_search(
+            Request.TIME_ZONE,
+            sig.encode_to_uri(),
+            int(sig.number_samples / sig.sample_rate_hz * 1000),
+            int(time.time() * 1000),
+        )
+
+        return await self.request(
+            "POST",
+            ShazamUrl.SEARCH_FROM_FILE.format(
+                language=self.language,
+                endpoint_country=self.endpoint_country,
+                uuid_1=str(uuid.uuid4()).upper(),
+                uuid_2=str(uuid.uuid4()).upper(),
+            ),
+            headers=self.headers(),
+            json=data,
+        )
