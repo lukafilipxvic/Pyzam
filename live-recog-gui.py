@@ -22,7 +22,7 @@ def record_audio(filename, seconds, rate):
 
 async def main():
     OUTPUT_FILENAME = 'recorded_audio.wav'
-    RECORD_SEC = 5
+    RECORD_SEC = 4
     RATE = 44100
 
     for i in range(5):
