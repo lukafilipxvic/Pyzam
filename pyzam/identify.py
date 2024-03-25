@@ -1,5 +1,6 @@
 import asyncio
 from shazamio import Shazam
+import tempfile
 import urllib.request
 
 
@@ -24,9 +25,8 @@ async def identify_audio(audio_file):
                     "/400x400cc.jpg", "/1000x1000cc.png"
                 )  # convert link into HD album art
 
-                urllib.request.urlretrieve(
-                    album_cover_hq, "album_cover.png"
-                )  # Download the album cover image from the URL
+                with tempfile.NamedTemporaryFile(suffix='.png', delete=False) as temp_file:
+                    urllib.request.urlretrieve(album_cover_hq, temp_file.name)  # Download the album cover image from the URL
 
         else:
             album_cover_hq = "NA found."
