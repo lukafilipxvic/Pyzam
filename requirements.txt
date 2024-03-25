@@ -1,5 +1,5 @@
-asyncio
-soundcard
-soundfile
-shazamio
-tkinter
+asyncio==3.4.3
+soundfile==0.12.1
+shazamio==0.5.1
+SoundCard==0.4.3
+#tk for live-recog-dev
