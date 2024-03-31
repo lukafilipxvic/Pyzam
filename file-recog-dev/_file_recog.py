@@ -4,7 +4,7 @@ from shazamio import Shazam
 
 async def main():
     shazam = Shazam()
-    out = await shazam.recognize("file-recog-dev/recorded_audio.wav")
+    out = await shazam.recognize_song("file-recog-dev/recorded_audio.wav")
 
     if "track" in out:
         track_title = out["track"]["title"]
