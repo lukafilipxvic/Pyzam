@@ -15,7 +15,7 @@ Pyzam is a free CLI music recognition tool in Python.
 ## Installation
 
 ### Dependencies
-'Pyzam' requires [ffmpeg](https://git.ffmpeg.org/ffmpeg.git 'Download ffmpeg').
+Pyzam requires [ffmpeg](https://git.ffmpeg.org/ffmpeg.git 'Download ffmpeg') installed.
 
 ### Installation
 ```bash
@@ -35,10 +35,7 @@ pyzam --microphone
 
 ```bash
 # Pyzam
-pyzam --input audio.mp3
-
-# ...which can be overriden
-pyzam --input audio.mp3 --duration 10
+pyzam --input audio_file.mp3
 ```
 
 See `pyzam --help` for more options.
@@ -46,6 +43,9 @@ See `pyzam --help` for more options.
 ## Options
 | Argument name     | Description                                          |
 | ----------------  | -----------------------------------------------------|
-| --speaker, -s     | Listens to the speaker of your device (by default).
+| --speaker, -s     | Listens to the speaker of your device (default)
 | --microphone, -m  | Listens to the microphone of your device
-| --help, -h        | Show Usage & Options and exit.   
+| --help, -h        | Show Usage & Options and exit
+| --duration, -d    | Length of microphone or speaker recording
+| --input           | Detect from the given audio input file
+| --json, -j        | Return the whole Shazam output in json
