@@ -48,4 +48,5 @@ See `pyzam --help` for more options.
 | --help, -h        | Show Usage & Options and exit
 | --duration, -d    | Length of microphone or speaker recording
 | --input           | Detect from the given audio input file
+| --loop, --l       | Loop the recognition process indefinitely
 | --json, -j        | Return the whole Shazam output in json

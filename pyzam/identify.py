@@ -6,7 +6,7 @@ import urllib.request
 
 async def identify_audio(audio_file, json=False):
     shazam = Shazam()
-    out = await shazam.recognize_song(audio_file)
+    out = await shazam.recognize(audio_file)
 
     track_title = 0
     artist = 0
@@ -34,9 +34,9 @@ async def identify_audio(audio_file, json=False):
             else:
                 album_cover_hq = None
 
-            print("Track: ", track_title)
-            print("Artist: ", artist)
-            print("Album Cover: ", album_cover_hq)
+            print(f"Track: {track_title}")
+            print(f"Artist: {artist}")
+            print(f"Album Cover: {album_cover_hq}")
 
     else:
         print("No matches found.")

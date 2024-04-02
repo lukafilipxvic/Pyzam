@@ -14,7 +14,6 @@ from pyzam import identify
 import shutil
 import sys
 import tempfile
-import time
 
 
 def _parser() -> argparse.ArgumentParser:
@@ -25,23 +24,29 @@ def _parser() -> argparse.ArgumentParser:
     )
     input_group = parser.add_mutually_exclusive_group(required=True)
     input_group.add_argument(
-        "-m", "--microphone", help="record from microphone", action="store_true"
+        "-m", "--microphone", help="record audio from microphone", action="store_true"
     )
     input_group.add_argument(
-        "-s", "--speaker", help="record from speaker (default)", action="store_true"
+        "-s",
+        "--speaker",
+        help="record audio from speaker (default)",
+        action="store_true",
     )
     input_group.add_argument(
         "--input", type=Path, help="detect from the given audio input file"
     )
 
     parser.add_argument(
-        "-d", "--duration", help="Audio recording duration (s)", type=int, default=5
+        "-d", "--duration", help="audio recording duration (s)", type=int, default=5
+    )
+    parser.add_argument(
+        "-l", "--loop", help="loop music recognition process", action="store_true"
     )
     parser.add_argument(
         "-j",
         "--json",
         action="store_true",
-        help="emit Shazam's response as JSON on stdout",
+        help="emit pyzam's response as raw JSON",
     )
     return parser
 
@@ -56,18 +61,22 @@ def main() -> None:
 
     temp_dir = tempfile.gettempdir()
 
-    if args.microphone:
-        saved_file = record.microphone(
-            filename=temp_dir + "/pyzam_audio.wav", seconds=args.duration
-        )
-    if args.speaker:
-        saved_file = record.speaker(
-            filename=temp_dir + "/pyzam_audio.wav", seconds=args.duration
-        )
-    if args.input:  # Input is path to file
-        saved_file = args.input
+    while True:
+        if args.microphone:
+            input = record.microphone(
+                filename=temp_dir + "/pyzam_audio.wav", seconds=args.duration
+            )
+        if args.speaker:
+            input = record.speaker(
+                filename=temp_dir + "/pyzam_audio.wav", seconds=args.duration
+            )
+        if args.input:
+            input = args.input
 
-    asyncio.run(identify.identify_audio(saved_file, json=args.json))
+        asyncio.run(identify.identify_audio(input, json=args.json))
+
+        if not args.loop:
+            break
 
 
 if __name__ == "__main__":
