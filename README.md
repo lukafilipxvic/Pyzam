@@ -39,6 +39,9 @@ pyzam --speaker -d 10 --loop
 
 # Listen to audio files
 pyzam --input audio_file.mp3
+
+# Listen to mixtapes and save as csv file
+pyzam --input audio_file.mp3 --duration 20 --mixtape
 ```
 
 See `pyzam --help` for more options.
