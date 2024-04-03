@@ -64,7 +64,7 @@ async def identify_audio(audio_file=str, json=False, write=False, timestamp=None
             print(f"Track: {track_title}")
             print(f"Artist: {artist}")
             print(
-                f"Album Cover: {album_cover_hq if album_cover_hq is not None else 'NA found'}"
+                f"Album Cover: {album_cover_hq}"
             )
 
     else:
@@ -105,7 +105,7 @@ def split_and_identify(audio_file, duration=str):
                         json=False,
                         write=True,
                         timestamp=timestamp,
-                        file_name=f"mixtape_{file_name}_{duration}secs",
+                        file_name=f"mixtape_{file_name}_{duration}sec",
                     )
                 )
             progress.update(task, advance=1)
