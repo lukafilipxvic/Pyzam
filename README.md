@@ -26,7 +26,7 @@ $ pip install git+https://github.com/lukafilipxvic/Pyzam.git#egg=Pyzam
 
 ## Usage
 ```bash
-# Pyzam listen to speaker for 5 seconds by default
+# Listen to speaker (5 seconds by default)
 pyzam --speaker
 
 # Listen to microphone
@@ -34,7 +34,10 @@ pyzam --microphone
 ```
 
 ```bash
-# Pyzam
+# Loop the recognition continously
+pyzam --speaker -d 10 --loop
+
+# Listen to audio files
 pyzam --input audio_file.mp3
 ```
 
@@ -45,8 +48,10 @@ See `pyzam --help` for more options.
 | ----------------  | -----------------------------------------------------|
 | --speaker, -s     | Listens to the speaker of your device (default)
 | --microphone, -m  | Listens to the microphone of your device
-| --help, -h        | Show Usage & Options and exit
+| --input           | Detects from the given audio input file
+| --help, -h        | Show usage & options and exit
 | --duration, -d    | Length of microphone or speaker recording
-| --input           | Detect from the given audio input file
-| --loop, --l       | Loop the recognition process indefinitely
-| --json, -j        | Return the whole Shazam output in json
+| --mixtape         | Detects every -d seconds for a given input file, only works with --input. --write is enabled automatically.
+| --loop, -l        | Loop the recognition process indefinitely
+| --json, -j        | Return the whole Shazamio output in json
+| --write, -w       | Writes the output of as a csv file

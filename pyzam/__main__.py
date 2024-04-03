@@ -8,10 +8,12 @@ CLI music recognition in python.
 
 import argparse
 import asyncio
+from datetime import datetime
 from pathlib import Path
-from pyzam import record
 from pyzam import identify
+from pyzam import record
 import shutil
+import soundfile as sf
 import sys
 import tempfile
 
@@ -46,7 +48,13 @@ def _parser() -> argparse.ArgumentParser:
         "-j",
         "--json",
         action="store_true",
-        help="emit pyzam's response as raw JSON",
+        help="emits the whole shazamio response as raw JSON",
+    )
+    parser.add_argument(
+        "-w", "--write", help="writes the output as a file", action="store_true"
+    )
+    parser.add_argument(
+        "--mixtape", help="Identifies songs of a mixtape", action="store_true"
     )
     return parser
 
@@ -64,16 +72,31 @@ def main() -> None:
     while True:
         if args.microphone:
             input = record.microphone(
-                filename=temp_dir + "/pyzam_audio.wav", seconds=args.duration
+                filename=temp_dir + "/pyzam_mic.wav", seconds=args.duration
             )
         if args.speaker:
             input = record.speaker(
-                filename=temp_dir + "/pyzam_audio.wav", seconds=args.duration
+                filename=temp_dir + "/pyzam_speaker.wav", seconds=args.duration
             )
         if args.input:
             input = args.input
+            if args.mixtape:
+                song = sf.SoundFile(input.__str__())
+                audio_length = song.frames / song.samplerate
+                iterations = int(-(-audio_length // args.duration))
+                print(f"Get ready, we are Pyzaming {iterations} times...")
+                identify.split_and_identify(input.__str__(), args.duration)
+                break
 
-        asyncio.run(identify.identify_audio(input, json=args.json))
+        current_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        asyncio.run(
+            identify.identify_audio(
+                input.__str__(),
+                json=args.json,
+                write=args.write,
+                timestamp=current_time,
+            )
+        )
 
         if not args.loop:
             break

@@ -18,6 +18,7 @@ setuptools.setup(
     url="https://github.com/lukafilipxvic/Pyzam",
     install_requires=[
         "asyncio",
+        "rich",
         "soundfile",
         "shazamio",
         "SoundCard",

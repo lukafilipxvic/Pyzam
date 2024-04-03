@@ -1,4 +1,5 @@
 asyncio==3.4.3
+rich==13.7.1
 soundfile==0.12.1
 shazamio==0.5.1
 SoundCard==0.4.3
