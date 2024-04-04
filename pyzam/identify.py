@@ -26,7 +26,7 @@ def write_csv(
     """
     file_exists = os.path.isfile(f"{file_name}.csv")
 
-    with open(f"{file_name}.csv", mode="a", newline="") as file:
+    with open(f"{file_name}.csv", mode="a", newline="", encoding='utf-8') as file:
         writer = csv.writer(file)
         if not file_exists:
             writer.writerow(["Timestamp", "Track", "Artist", "Album Cover"])

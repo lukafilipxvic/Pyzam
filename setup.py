@@ -12,7 +12,7 @@ setuptools.setup(
         ]
     },
     author="lukafilipxvic",
-    description="Is a FREE CLI music recognition tool using python.",
+    description="A CLI music recognition tool for audio and mixtapes using Python.",
     long_description=long_description,
     long_description_content_type="text/markdown",
     url="https://github.com/lukafilipxvic/Pyzam",

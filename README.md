@@ -10,7 +10,7 @@
   <a href="./LICENSE.md"><img src="https://img.shields.io/badge/license-MIT-blue.svg"></a>
 </p>
 
-Pyzam is a free CLI music recognition tool in Python.
+Pyzam is a free CLI music recognition tool for audio and mixtapes in Python.
 
 ## Installation
 
