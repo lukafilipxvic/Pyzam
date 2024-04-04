@@ -1,6 +1,7 @@
 import asyncio
 import csv
 from datetime import datetime
+import random
 from rich.progress import Progress
 from shazamio import Shazam
 import soundfile as sf
@@ -9,28 +10,21 @@ import time
 import os
 
 
-def write_csv(
-    file_name: str, timestamp: str, track_title: str, artist: str, album_cover: str
-):
+def write_csv(file_name: str, data_rows: list):
     """
     Writes the found song's data into a CSV file.
 
     :param file_name: Name for csv file
-    :param timestamp: Time at which the song was recognized.
-    :param track_title: Track title
-    :param artist: Artist name
-    :param album_cover: URL to album cover image
-
-    Returns:
-        Saves CSV file.
+    :param data_rows: Includes timestamp, track_title, artist and album_cover.
     """
+    header = ["Timestamp", "Track", "Artist", "Album Cover"]
     file_exists = os.path.isfile(f"{file_name}.csv")
 
-    with open(f"{file_name}.csv", mode="a", newline="", encoding='utf-8') as file:
+    with open(f"{file_name}.csv", mode="a", newline="", encoding="utf-8") as file:
         writer = csv.writer(file)
         if not file_exists:
-            writer.writerow(["Timestamp", "Track", "Artist", "Album Cover"])
-        writer.writerow([timestamp, track_title, artist, album_cover])
+            writer.writerow(header)
+        writer.writerow(data_rows)
 
 
 async def identify_audio(
@@ -50,8 +44,12 @@ async def identify_audio(
     if not os.path.exists(audio_file):
         print(f"Error: File '{audio_file}' not found.")
         return
-    shazam = Shazam()
-    out = await shazam.recognize(audio_file)
+    # Shazam's maximum API call limit is 20 requests per minute.
+    # To avoid API call limits, Shazamio's http_client needs to a proxy.
+    # We can make the requests with proxies.
+    # 20% ≈ 1 change for 5 calls
+    shazam = Shazam(endpoint_country=random.choices(['AU', 'US'], weights=[20, 80])[0],)
+    out = await shazam.recognize(data=audio_file, proxy=None)
 
     track_title = 0
     artist = 0
@@ -70,20 +68,19 @@ async def identify_audio(
                 album_cover_hq = album_cover.replace(
                     "/400x400cc.jpg", "/1400x1400cc.png"
                 )
+            else:
+                album_cover_hq = None
 
+            # Writes CSV file.
             if write == True:
                 if file_name is not None:
                     write_csv(
-                        f"{file_name}", timestamp, track_title, artist, album_cover_hq
+                        f"{file_name}", [timestamp, track_title, artist, album_cover_hq]
                     )
                 else:
                     file_name = os.path.splitext(os.path.basename(audio_file))[0]
                     write_csv(
-                        f"{file_name}",
-                        timestamp,
-                        track_title,
-                        artist,
-                        album_cover_hq,
+                        f"{file_name}", [timestamp, track_title, artist, album_cover_hq]
                     )
 
             print(f"Track: {track_title}")
@@ -107,7 +104,7 @@ def split_and_identify(audio_file, duration=str):
     file_name = os.path.splitext(os.path.basename(audio_file))[0]
 
     # Reads the audio file and calculates segment count.
-    print(f'Reading {audio_file}...')
+    print(f"Reading {audio_file}...")
     data, samplerate = sf.read(audio_file)
     samples_per_duration = int(samplerate * duration)
     num_segments = len(data) // samples_per_duration
@@ -116,14 +113,15 @@ def split_and_identify(audio_file, duration=str):
         task = progress.add_task(
             "[green]Splitting and identifying audio...", total=num_segments
         )
+        # Make each segment an audio file to be used in Shazamio.
         for i in range(num_segments):
             start_idx = i * samples_per_duration
             end_idx = start_idx + samples_per_duration
             segment_data = data[start_idx:end_idx]
             segment_time = start_idx / samplerate
-            timestamp = datetime.utcfromtimestamp(segment_time).strftime(
-                "%H:%M:%S"
-            )  # Convert to MM:SS format
+            # Convert to HH:MM:SS format
+            timestamp = datetime.utcfromtimestamp(segment_time).strftime("%H:%M:%S")
+            # Temporarily saves audio file, shazams, then deletes.
             with tempfile.NamedTemporaryFile(suffix=".wav", delete=False) as temp_file:
                 sf.write(temp_file.name, segment_data, samplerate)
                 asyncio.run(
@@ -135,6 +133,8 @@ def split_and_identify(audio_file, duration=str):
                         file_name=f"mixtape_{file_name}_{duration}sec",
                     )
                 )
+                temp_file.close()
+                os.remove(temp_file.name)
             progress.update(task, advance=1)
-            # Shazamio has an call limit, hence we show down the process until we find a fix.
+            # We need to slow down the process unless proxies are used.
             time.sleep(2)

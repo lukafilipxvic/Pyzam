@@ -5,7 +5,7 @@ with open("README.md", "r", encoding="utf-8") as fh:
 
 setuptools.setup(
     name="pyzam",
-    version="0.1",
+    version="0.10",
     entry_points={
         'console_scripts': [
             'pyzam = pyzam.__main__:main'

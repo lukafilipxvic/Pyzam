@@ -22,7 +22,7 @@ def speaker(filename: str, seconds):
 def microphone(filename: str, seconds):
     """
     Records the device's device.
-    
+
     :param filename: Name of audio file written.
     :param seconds: Duration to record (seconds).
     """
