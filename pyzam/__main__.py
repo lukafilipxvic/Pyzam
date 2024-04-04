@@ -100,6 +100,9 @@ def identify_audio(input_file, args):
 
 
 def main() -> None:
+    #Logging requests in CLI. For Development purposes.
+    logging.basicConfig(level=logging.DEBUG)
+    
     check_ffmpeg()
     parser = _parser()
     args = parser.parse_args()
