@@ -2,7 +2,7 @@
 
 """
 Pyzam 0.10
-CLI music recognition in python.
+A CLI music recognition tool for audio and mixtapes using Python.
 """
 
 import argparse
@@ -107,7 +107,7 @@ def main() -> None:
     # Check if both --input and --loop are used together
     if args.input and args.loop:
         parser.error("--loop is only allowed with --microphone or --speaker")
-    # New check for --mixtape with --microphone or --speaker
+    # Check for --mixtape with --microphone or --speaker
     if args.mixtape and (args.microphone or args.speaker):
         parser.error("--mixtape is only allowed with --input")
 
