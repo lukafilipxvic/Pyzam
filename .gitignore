@@ -2,6 +2,11 @@
 __pycache__/
 *.py[cod]
 *$py.class
+*.csv
+*.wav
+*.mp3
+proxy.py
+*.opus
 
 # C extensions
 *.so

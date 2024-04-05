@@ -12,6 +12,8 @@
 
 Pyzam is a free CLI music recognition tool for audio and mixtapes in Python.
 
+This is the Development Branch.
+
 ## Installation
 
 ### Dependencies
@@ -62,7 +64,7 @@ See `pyzam --help` for more options.
 
 ## Known Limitations
 ### Shazam API Call Limit (Error 429)
-Shazam allows up to 20 requests per minute. Hence, a proxy is recommended to improve ```--mixtape``` recognition speeds.
+Shazam allows up to 20 requests per minute. Hence, a proxy is recommended to speed up recognition when using ```--mixtape```.
 
 ### 12 Second Sample Limit per request
 The maximum sample duration that Shazam allows is 12 seconds. Any audio after 12 seconds will not be recieved by Shazam. 
