@@ -6,11 +6,7 @@ with open("README.md", "r", encoding="utf-8") as fh:
 setuptools.setup(
     name="pyzam",
     version="0.10",
-    entry_points={
-        'console_scripts': [
-            'pyzam = pyzam.__main__:main'
-        ]
-    },
+    entry_points={"console_scripts": ["pyzam = pyzam.__main__:main"]},
     author="lukafilipxvic",
     description="A CLI music recognition tool for audio and mixtapes using Python.",
     long_description=long_description,
@@ -22,7 +18,7 @@ setuptools.setup(
         "soundfile",
         "shazamio",
         "SoundCard",
-],
+    ],
     packages=setuptools.find_packages(),
     python_requires=">=3.9",
 )

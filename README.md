@@ -8,6 +8,7 @@
 
 <p align="center">
   <a href="./LICENSE.md"><img src="https://img.shields.io/badge/license-MIT-blue.svg"></a>
+  <a href="https://pypi.org/project/pyzam/"><img src="https://img.shields.io/pypi/v/pyzam.svg"></a>
 </p>
 
 Pyzam is a free CLI music recognition tool for audio and mixtapes in Python.
@@ -19,7 +20,7 @@ Pyzam requires [ffmpeg](https://git.ffmpeg.org/ffmpeg.git 'Download ffmpeg') ins
 
 ### Installation
 ```bash
-$ pip install git+https://github.com/lukafilipxvic/Pyzam.git#egg=Pyzam
+$ pip install pyzam
 
 ```
 
@@ -37,10 +38,10 @@ pyzam --input audio_file.mp3
 ```
 
 ```bash
-# Loop the recognition continously
+# Loop the recognition continously and save the logs as CSV file
 pyzam --speaker -d 10 --loop
 
-# Listen to mixtapes and save record log as csv file
+# Listen to mixtapes and save the logs as CSV file
 pyzam --input audio_file.mp3 --duration 12 --mixtape
 ```
 
@@ -49,15 +50,15 @@ See `pyzam --help` for more options.
 ## Options
 | Argument name     | Description                                          |
 | ----------------  | -----------------------------------------------------|
-| --input           | Detects from the given audio input file
-| --microphone, -m  | Listens to the microphone of your device
-| --speaker, -s     | Listens to the speaker of your device (default)
-| --help, -h        | Show usage & options and exit
+| --input           | Detects from the given audio input file.
+| --microphone, -m  | Listens to the microphone of your device.
+| --speaker, -s     | Listens to the speaker of your device (default).
+| --help, -h        | Show usage & options and exit.
 | --duration, -d    | Length of microphone or speaker recording. Max = 12 seconds.
-| --loop, -l        | Loop the recognition process indefinitely
+| --loop, -l        | Loop the recognition process indefinitely.
 | --mixtape         | Detects every -d seconds for a given input file, only works with --input. --write is enabled automatically.
-| --json, -j        | Return the whole Shazamio output in json
-| --write, -w       | Writes the output of as a csv file
+| --json, -j        | Return the whole Shazamio output in JSON.
+| --write, -w       | Writes the output of as a CSV file.
 
 
 ## Known Limitations

@@ -5,6 +5,7 @@ __pycache__/
 *.csv
 *.wav
 *.mp3
+csv_dup.py
 proxy.py
 *.opus
 

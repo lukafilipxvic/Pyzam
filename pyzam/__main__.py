@@ -103,11 +103,11 @@ def main() -> None:
     check_ffmpeg()
     parser = _parser()
     args = parser.parse_args()
-    
-    # Check if both --input and --loop are used together
+
+    # Check if  --input and --loop are used together
     if args.input and args.loop:
         parser.error("--loop is only allowed with --microphone or --speaker")
-    # Check for --mixtape with --microphone or --speaker
+    # Check if --mixtape and (--microphone or --speaker) are used together
     if args.mixtape and (args.microphone or args.speaker):
         parser.error("--mixtape is only allowed with --input")
 
