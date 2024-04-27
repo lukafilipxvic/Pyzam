@@ -9,6 +9,8 @@
 <p align="center">
   <a href="./LICENSE.md"><img src="https://img.shields.io/badge/license-MIT-blue.svg"></a>
   <a href="https://pypi.org/project/pyzam/"><img src="https://img.shields.io/pypi/v/pyzam.svg"></a>
+  <img src="https://pepy.tech/badge/pyzam" alt="https://pepy.tech/project/pyzam">
+  <img src="https://pepy.tech/badge/pyzam/month" alt="https://pepy.tech/project/pyzam">  
 </p>
 
 Pyzam is a free CLI music recognition tool for audio and mixtapes in Python.
