@@ -21,11 +21,18 @@ Pyzam is a free CLI music recognition tool for audio and mixtapes in Python.
 Pyzam requires [ffmpeg](https://git.ffmpeg.org/ffmpeg.git 'Download ffmpeg') installed.
 
 ### Installation
+Using pip:
 ```bash
 $ pip install pyzam
 
 ```
 
+Using environment.yml with Conda (installs ffmpeg for you):
+```
+conda env create -n pyzam --file=environment.yml
+
+conda activate pyzam
+```
 
 ## Usage
 ```bash
