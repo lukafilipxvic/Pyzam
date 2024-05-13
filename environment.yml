@@ -1,0 +1,8 @@
+name: pyzam-env
+channels:
+  - defaults
+dependencies:
+  - ffmpeg
+  - pip
+  - pip:
+      - pyzam
