@@ -1,6 +1,6 @@
 asyncio==3.4.3
-rich==13.7.1
+fastapi==0.111.0
+rich==13.8
 soundfile==0.12.1
-shazamio==0.5.1
+shazamio==0.6
 SoundCard==0.4.3
-#tk for live-recog-dev folder

@@ -44,6 +44,9 @@ pyzam --microphone
 
 # Listen to audio files
 pyzam --input audio_file.mp3
+
+# Listen to audio via URL
+pyzam --url "https://archive.org/download/09-hold-me-in-your-arms/02%20-%20Never%20Gonna%20Give%20You%20Up.mp3"
 ```
 
 ```bash
@@ -62,6 +65,7 @@ See `pyzam --help` for more options.
 | --input           | Detects from the given audio input file.
 | --microphone, -m  | Listens to the microphone of your device.
 | --speaker, -s     | Listens to the speaker of your device (default).
+| --url, -u         | Detects from the given URL to an audio file.
 | --help, -h        | Show usage & options and exit.
 | --duration, -d    | Length of microphone or speaker recording. Max = 12 seconds.
 | --loop, -l        | Loop the recognition process indefinitely.

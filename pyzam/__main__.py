@@ -1,8 +1,8 @@
 #! /usr/bin/env python3
 
 """
-Pyzam 0.10
-A CLI music recognition tool for audio and mixtapes using Python.
+Pyzam 0.11
+A CLI music recognition tool for audio and mixtapes.
 """
 
 import argparse
@@ -14,8 +14,6 @@ import shutil
 import soundfile as sf
 import sys
 import tempfile
-
-import logging
 
 
 def _parser() -> argparse.ArgumentParser:
@@ -39,6 +37,11 @@ def _parser() -> argparse.ArgumentParser:
         "--speaker",
         action="store_true",
         help="record audio from speaker (default)",
+    )
+    input_group.add_argument(
+        "-u",
+        "--url",
+        help="Detect from an audio URL",
     )
 
     parser.add_argument(
@@ -78,6 +81,10 @@ def get_input_file(args, temp_dir) -> Path:
         return record.speaker(
             filename=f"{temp_dir}/pyzam_speaker.wav", seconds=args.duration
         )
+    elif args.url:
+        return record.url(url=args.url,
+            filename=f"{temp_dir}/pyzam_url.wav"
+        )
     else:
         return args.input
 
@@ -104,12 +111,15 @@ def main() -> None:
     parser = _parser()
     args = parser.parse_args()
 
-    # Check if  --input and --loop are used together
+    # Check if  --input or --url and --loop are used together
     if args.input and args.loop:
         parser.error("--loop is only allowed with --microphone or --speaker")
+    if args.url and args.loop:
+        parser.error("--loop is only allowed with --microphone or --speaker")
+
     # Check if --mixtape and (--microphone or --speaker) are used together
     if args.mixtape and (args.microphone or args.speaker):
-        parser.error("--mixtape is only allowed with --input")
+        parser.error("--mixtape is only allowed with --input or --url")
 
     temp_dir = tempfile.gettempdir()
 

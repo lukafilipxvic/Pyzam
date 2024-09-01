@@ -77,7 +77,7 @@ async def identify_audio(
 
     if json:
         print(out)
-        return
+        return out
 
     track_info = extract_track_info(out)
     print_track_info(track_info)
