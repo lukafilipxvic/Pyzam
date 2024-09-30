@@ -1,7 +1,7 @@
 #! /usr/bin/env python3
 
 """
-Pyzam 0.12
+Pyzam 0.12.1
 A CLI music recognition tool for audio and mixtapes.
 """
 
