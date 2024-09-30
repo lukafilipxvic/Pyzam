@@ -5,7 +5,7 @@ with open("README.md", "r", encoding="utf-8") as fh:
 
 setuptools.setup(
     name="pyzam",
-    version="0.11",
+    version="0.12",
     entry_points={"console_scripts": ["pyzam = pyzam.__main__:main"]},
     author="lukafilipxvic",
     description="A CLI music recognition tool for audio and mixtapes.",
@@ -20,6 +20,7 @@ setuptools.setup(
         "SoundCard",
     ],
     packages=setuptools.find_packages(),
+    package_data={"pyzam": ["data/default_album_cover.png"]},
     python_requires=">=3.9",
     license="MIT",
     classifiers=[

@@ -15,6 +15,10 @@
 
 Pyzam is a free CLI music recognition tool for audio and mixtapes in Python.
 
+<p align="center">
+  <img src="https://github.com/lukafilipxvic/pyzam/blob/main/images/pyzam-usage.gif" alt="Pyzam usage", width"459">
+</p>
+
 ## Installation
 
 ### Dependencies
@@ -51,7 +55,7 @@ pyzam --url "https://archive.org/download/09-hold-me-in-your-arms/02%20-%20Never
 
 ```bash
 # Loop the recognition continously and save the logs as CSV file
-pyzam --speaker -d 10 --loop
+pyzam --speaker -d 10 --write --loop
 
 # Listen to mixtapes and save the logs as CSV file
 pyzam --input audio_file.mp3 --duration 12 --mixtape
@@ -66,8 +70,9 @@ See `pyzam --help` for more options.
 | --microphone, -m  | Listens to the microphone of your device.
 | --speaker, -s     | Listens to the speaker of your device (default).
 | --url, -u         | Detects from the given URL to an audio file.
-| --help, -h        | Show usage & options and exit.
+| --help, -h        | Show usage, options and exit.
 | --duration, -d    | Length of microphone or speaker recording. Max = 12 seconds.
+| --quiet, -q       | Supresses the operation messages (i.e. Recording speaker for X seconds...). 
 | --loop, -l        | Loop the recognition process indefinitely.
 | --mixtape         | Detects every -d seconds for a given input file, only works with --input. --write is enabled automatically.
 | --json, -j        | Return the whole Shazamio output in JSON.

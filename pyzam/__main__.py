@@ -1,7 +1,7 @@
 #! /usr/bin/env python3
 
 """
-Pyzam 0.11
+Pyzam 0.12
 A CLI music recognition tool for audio and mixtapes.
 """
 
@@ -47,6 +47,9 @@ def _parser() -> argparse.ArgumentParser:
     parser.add_argument(
         "-d", "--duration", type=int, default=5, help="audio recording duration (s)"
     )
+    parser.add_argument(
+        "-q", "--quiet", action="store_true", help="suppress operation messages"
+    )
     run_group.add_argument(
         "--loop", "-l", action="store_true", help="loop music recognition process"
     )
@@ -75,15 +78,15 @@ def check_ffmpeg():
 def get_input_file(args, temp_dir) -> Path:
     if args.microphone:
         return record.microphone(
-            filename=f"{temp_dir}/pyzam_mic.wav", seconds=args.duration
+            filename=f"{temp_dir}/pyzam_mic.wav", seconds=args.duration, quiet=args.quiet
         )
     elif args.speaker:
         return record.speaker(
-            filename=f"{temp_dir}/pyzam_speaker.wav", seconds=args.duration
+            filename=f"{temp_dir}/pyzam_speaker.wav", seconds=args.duration, quiet=args.quiet
         )
     elif args.url:
-        return record.url(url=args.url,
-            filename=f"{temp_dir}/pyzam_url.wav"
+        return record.url(
+            url=args.url, filename=f"{temp_dir}/pyzam_url.wav", quiet=args.quiet
         )
     else:
         return args.input
