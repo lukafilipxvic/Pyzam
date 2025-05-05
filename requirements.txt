@@ -1,8 +1,0 @@
-asyncio==3.4.3
-climage==0.2.2
-fastapi==0.111.0
-requests==2.32.3
-rich==13.8
-soundfile==0.12.1
-shazamio==0.6
-SoundCard==0.4.3

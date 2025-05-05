@@ -4,14 +4,14 @@ Developers can leverage Pyzam to build a backend API to perform music identifica
 ### Dependencies
 Pyzam APi requires fastapi
 ```bash
-$ pip install fastapi
+$ uv add 'pyzam[fastapi]'
 
 ```
 
 ### Usage
 ```bash
 # Initiate the API
-fastapi dev main.py
+uv run fastapi dev main.py
 ```
 ```bash
 # Get request using an audio URL
