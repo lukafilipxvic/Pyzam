@@ -25,10 +25,14 @@ Pyzam is a free CLI music recognition tool for audio and mixtapes in Python.
 Pyzam requires [ffmpeg](https://git.ffmpeg.org/ffmpeg.git 'Download ffmpeg') installed.
 
 ### Installation
+Using uv (recommended):
+```bash
+uv tool run pyzam --speaker
+```
+
 Using pip:
 ```bash
 $ pip install pyzam
-
 ```
 
 Using environment.yml with Conda (installs ffmpeg for you):
@@ -39,6 +43,11 @@ conda activate pyzam
 ```
 
 ## Usage
+Using uv:
+```bash
+uv tool run pyzam --speaker
+```
+Using pip:
 ```bash
 # Listen to speaker (5 seconds by default)
 pyzam --speaker
@@ -83,5 +92,5 @@ See `pyzam --help` for more options.
 ### Shazam API Call Limit (Error 429)
 Shazam allows up to 20 requests per minute. Hence, a proxy is recommended to speed up recognition when using ```--mixtape```.
 
-### 12 Second Sample Limit per request
+### 12 Second Duration Limit per request
 The maximum sample duration that Shazam allows is 12 seconds. Any audio after 12 seconds will not be recieved by Shazam. 

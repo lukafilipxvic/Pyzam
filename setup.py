@@ -5,7 +5,7 @@ with open("README.md", "r", encoding="utf-8") as fh:
 
 setuptools.setup(
     name="pyzam",
-    version="0.12.3",
+    version="0.13.0",
     entry_points={"console_scripts": ["pyzam = pyzam.__main__:main"]},
     author="lukafilipxvic",
     description="A CLI music recognition tool for audio and mixtapes.",

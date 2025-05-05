@@ -1,0 +1,40 @@
+[project]
+name = "Pyzam"
+version = "0.13.0"
+description = "Recognize and Visualize Songs in Your CLI"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "asyncio>=3.4.3",
+    "climage>=0.2.2",
+    "requests>=2.32.3",
+    "rich>=14.0.0",
+    "setuptools>=80.3.1",
+    "shazamio>=0.8.0",
+    "soundcard>=0.4.4",
+    "soundfile>=0.13.1",
+]
+
+[project.optional-dependencies]
+api = [
+    "fastapi>=0.115.12",
+]
+
+[project.scripts]
+pyzam = "pyzam.__main__:main"
+
+[build-system]
+requires = ["setuptools>=42"]
+build-backend = "setuptools.build_meta"
+
+[[tool.uv.index]]
+name = "testpypi"
+url = "https://test.pypi.org/simple/"
+publish-url = "https://test.pypi.org/legacy/"
+explicit = true
+
+[[tool.uv.index]]
+name = "main-pypi"
+url = "https://pypi.org/simple/"
+publish-url = "https://upload.pypi.org/legacy/"
+explicit = true

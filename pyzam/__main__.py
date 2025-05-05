@@ -1,7 +1,7 @@
 #! /usr/bin/env python3
 
 """
-Pyzam 0.12.3
+Pyzam 0.13.0
 A CLI music recognition tool for audio and mixtapes.
 """
 
@@ -20,7 +20,7 @@ def _parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
         formatter_class=argparse.ArgumentDefaultsHelpFormatter,
         prog="Pyzam",
-        description="CLI music recognition in python.",
+        description="Recognize and visualize music in your CLI.",
     )
     input_group = parser.add_mutually_exclusive_group(required=True)
     run_group = parser.add_mutually_exclusive_group()
