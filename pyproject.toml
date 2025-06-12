@@ -1,15 +1,15 @@
 [project]
 name = "Pyzam"
-version = "0.13.0"
+version = "0.13.2"
 description = "Recognize and Visualize Songs in Your CLI"
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
-    "asyncio>=3.4.3",
     "climage>=0.2.2",
+    "numpy<=2.2.6",
     "requests>=2.32.3",
     "rich>=14.0.0",
-    "setuptools>=80.3.1",
+    "setuptools<81.0.0",
     "shazamio>=0.8.0",
     "soundcard>=0.4.4",
     "soundfile>=0.13.1",

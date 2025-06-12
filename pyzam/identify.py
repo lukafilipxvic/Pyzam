@@ -4,7 +4,7 @@ import csv
 from datetime import datetime
 import requests
 from rich.progress import MofNCompleteColumn, Progress, TimeElapsedColumn
-import pkg_resources
+import importlib.resources
 from shazamio import Shazam
 import soundfile as sf
 import tempfile
@@ -47,12 +47,12 @@ def print_track_info(track_info):
     track_name = f"Track: {track_info[0]}"
     artist_name = f"Artist: {track_info[1]}"
     
-    default_cover_data = pkg_resources.resource_string(__name__, 'data/default_album_cover.png')
-    with tempfile.NamedTemporaryFile(delete=False, suffix='.png') as temp_file:
-        temp_file.write(default_cover_data)
-        default_cover_path = temp_file.name
-
-    album_cover = climage.convert(default_cover_path, is_unicode=True, width=40)
+    try:
+        with importlib.resources.files(__name__).joinpath('data/default_album_cover.png').open('rb') as f:
+            album_cover = climage.convert(f, is_unicode=True, width=40)
+    except Exception as e:
+        print(f"Error loading default album cover: {e}")
+        album_cover = " " * 40  # Fallback empty cover
 
     if track_info[2]:
         try:
